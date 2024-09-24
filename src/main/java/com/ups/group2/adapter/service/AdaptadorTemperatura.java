@@ -84,6 +84,36 @@ public class AdaptadorTemperatura implements RegistroTemperatura {
 
         return resultados;
     }
+
+    public List<SensorTemperaturaDTO> obtenerTodasLasMediciones() {
+        List<SensorTemperaturaDTO> resultados = new ArrayList<>();
+
+        // Buscar todas las mediciones de la tabla Celsius
+        List<CelsiusSensor> sensoresCelsius = celsiusRepo.findAll();
+        for (CelsiusSensor sensorC : sensoresCelsius) {
+            SensorTemperaturaDTO dto = new SensorTemperaturaDTO(
+                    sensorC.getUbicacion(),
+                    sensorC.getValorSensor(),
+                    "Celsius"
+            );
+            resultados.add(dto);
+        }
+
+        // Buscar todas las mediciones de la tabla Fahrenheit
+        List<FahrenheitSensor> sensoresFahrenheit = fahrenheitRepo.findAll();
+        for (FahrenheitSensor sensorF : sensoresFahrenheit) {
+            // Convertir la temperatura de Fahrenheit a Celsius
+            double temperaturaCelsius = convertirFahrenheitToCelsius(sensorF.getTemperatura());
+            SensorTemperaturaDTO dto = new SensorTemperaturaDTO(
+                    sensorF.getBloque(),
+                    temperaturaCelsius,
+                    "Fahrenheit (convertido a Celsius)"
+            );
+            resultados.add(dto);
+        }
+
+        return resultados;
+    }
     
     public double convertirFahrenheitToCelsius(double valorFahrenheit) {
         return (valorFahrenheit - 32) * 5 / 9;

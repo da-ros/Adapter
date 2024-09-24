@@ -8,4 +8,5 @@ import com.ups.group2.adapter.model.dto.SensorTemperaturaDTO;
 public interface RegistroTemperatura {
     void registrarTemperatura(String bloque, double temperatura, String tipo);
     List<SensorTemperaturaDTO> obtenerTemperatura(String bloque);
+    List<SensorTemperaturaDTO> obtenerTodasLasMediciones();
 }

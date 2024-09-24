@@ -32,9 +32,11 @@ public class FahrenheitSensor {
     public Long getId() {
         return id;
     }
+
     public double getTemperatura() {
         return temperatura;
     }
+
     public String getBloque() {
         return bloque;
     }

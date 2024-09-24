@@ -36,5 +36,11 @@ public class TemperaturaController {
         return ResponseEntity.ok(temperaturas);
     }
 
+    @GetMapping("/obtenerTodasMediciones")
+    public ResponseEntity<List<SensorTemperaturaDTO>> obtenerTodasMediciones() {
+        List<SensorTemperaturaDTO> todasLasTemperaturas = adaptadorTemperatura.obtenerTodasLasMediciones();
+        return ResponseEntity.ok(todasLasTemperaturas);
+    }
+
 
 }
