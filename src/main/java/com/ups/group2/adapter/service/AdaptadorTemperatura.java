@@ -1,13 +1,18 @@
 package com.ups.group2.adapter.service;
 
+//import org.hibernate.mapping.List;
+import java.util.List;
+import java.util.ArrayList;
 //import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ups.group2.adapter.model.CelsiusSensor;
 import com.ups.group2.adapter.model.FahrenheitSensor;
+import com.ups.group2.adapter.model.dto.SensorTemperaturaDTO;
 import com.ups.group2.adapter.repository.CelsiusSensorRepository;
 import com.ups.group2.adapter.repository.FahrenheitSensorRepository;
+import com.ups.group2.adapter.model.dto.*;
 import java.util.Optional;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -37,25 +42,47 @@ public class AdaptadorTemperatura implements RegistroTemperatura {
     }
 
     @Override
-    public double obtenerTemperatura(String bloque) {
+    public List<SensorTemperaturaDTO> obtenerTemperatura(String bloque) {
+        List<SensorTemperaturaDTO> resultados = new ArrayList<>();
 
         // Consulta primero en la tabla de Celsius
-        Optional<CelsiusSensor> sensorCelsius = celsiusRepo.findByUbicacion(bloque);
+        List<CelsiusSensor> sensoresCelsius = celsiusRepo.findByUbicacion(bloque);
         
-        if (sensorCelsius.isPresent()) {
-            return sensorCelsius.get().getValorSensor();
+        if (!sensoresCelsius.isEmpty()) {
+            // Recorremos todos los sensores Celsius encontrados
+            for (CelsiusSensor sensorC : sensoresCelsius) {
+                SensorTemperaturaDTO dto = new SensorTemperaturaDTO(
+                    sensorC.getUbicacion(),
+                    sensorC.getValorSensor(),
+                    "Celsius"
+                );
+                resultados.add(dto);
+            }
         }
         
-        // Si no encuentra en Celsius, busca en la tabla de Fahrenheit
-        Optional<FahrenheitSensor> sensorFahrenheit = fahrenheitRepo.findByBloque(bloque);
+        // Busca en la tabla de Fahrenheit
+        List<FahrenheitSensor> sensoresFahrenheit = fahrenheitRepo.findByBloque(bloque);
         
-        if (sensorFahrenheit.isPresent()) {
-            // Convertir de Fahrenheit a Celsius
-            return convertirFahrenheitToCelsius(sensorFahrenheit.get().getTemperatura());
+        if (!sensoresFahrenheit.isEmpty()) {
+            // Recorremos todos los sensores Fahrenheit encontrados
+            for (FahrenheitSensor sensorF : sensoresFahrenheit) {
+                // Convertimos la temperatura a Celsius
+                double temperaturaCelsius = convertirFahrenheitToCelsius(sensorF.getTemperatura());
+                SensorTemperaturaDTO dto = new SensorTemperaturaDTO(
+                    sensorF.getBloque(),
+                    temperaturaCelsius,
+                    "Obtenido en Fahrenheit y Convertido a Celsius)"
+                );
+                resultados.add(dto);
+            }
         }
         
-        // Si no se encuentra en ninguna
-        throw new EntityNotFoundException("Bloque NO Encontrado en ninguna de las tablas.");
+        // Si la lista de resultados sigue vacía, lanzamos una excepción
+        if (resultados.isEmpty()) {
+            throw new EntityNotFoundException("Bloque NO Encontrado en ninguna de las tablas.");
+        }
+
+        return resultados;
     }
     
     public double convertirFahrenheitToCelsius(double valorFahrenheit) {
