@@ -2,6 +2,8 @@ package com.ups.group2.adapter.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 //import java.io.Serializable;
 
 @Entity
@@ -18,6 +20,9 @@ public class CelsiusSensor {
     @Column(name="localidad")
     private String ubicacion;  // 'ubicacion' hace referencia al bloque
 
+    @Column(name = "fecha_registro")
+    private LocalDateTime fechaRegistro;
+
     // Getters, Setters, Constructors
 
     public CelsiusSensor(Long id, double valorSensor, String ubicacion) {
@@ -27,6 +32,14 @@ public class CelsiusSensor {
     }
 
     public CelsiusSensor() {
+    }
+
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
 
     public Long getId() {

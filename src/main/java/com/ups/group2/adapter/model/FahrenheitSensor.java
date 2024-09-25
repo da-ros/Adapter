@@ -2,6 +2,8 @@ package com.ups.group2.adapter.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 //import java.io.Serializable;
 
 @Entity
@@ -18,6 +20,9 @@ public class FahrenheitSensor {
     @Column(name="bloque")
     private String bloque;
 
+    @Column(name = "fecha_registro")
+    private LocalDateTime fechaRegistro;
+
     // Getters, Setters, Constructors
 
     public FahrenheitSensor(Long id, double temperatura, String bloque) {
@@ -27,6 +32,14 @@ public class FahrenheitSensor {
     }
    
     public FahrenheitSensor() {
+    }
+
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
 
     public Long getId() {

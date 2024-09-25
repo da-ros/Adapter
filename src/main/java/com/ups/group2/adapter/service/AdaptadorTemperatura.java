@@ -1,6 +1,7 @@
 package com.ups.group2.adapter.service;
 
 //import org.hibernate.mapping.List;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 //import org.apache.el.stream.Optional;
@@ -32,11 +33,13 @@ public class AdaptadorTemperatura implements RegistroTemperatura {
             CelsiusSensor sensor = new CelsiusSensor();
             sensor.setUbicacion(bloque);
             sensor.setValorSensor(temperatura);
+            sensor.setFechaRegistro(LocalDateTime.now());
             celsiusRepo.save(sensor);
         } else if (tipo.equals("Fahrenheit")) {
             FahrenheitSensor sensor = new FahrenheitSensor();
             sensor.setBloque(bloque);
             sensor.setTemperatura(temperatura);
+            sensor.setFechaRegistro(LocalDateTime.now());
             fahrenheitRepo.save(sensor);
         }
     }
@@ -54,7 +57,8 @@ public class AdaptadorTemperatura implements RegistroTemperatura {
                 SensorTemperaturaDTO dto = new SensorTemperaturaDTO(
                     sensorC.getUbicacion(),
                     sensorC.getValorSensor(),
-                    "Celsius"
+                    "Celsius",
+                    sensorC.getFechaRegistro()
                 );
                 resultados.add(dto);
             }
@@ -71,7 +75,8 @@ public class AdaptadorTemperatura implements RegistroTemperatura {
                 SensorTemperaturaDTO dto = new SensorTemperaturaDTO(
                     sensorF.getBloque(),
                     temperaturaCelsius,
-                    "Obtenido en Fahrenheit y Convertido a Celsius)"
+                    "Obtenido en Fahrenheit y Convertido a Celsius",
+                    sensorF.getFechaRegistro()
                 );
                 resultados.add(dto);
             }
@@ -94,7 +99,8 @@ public class AdaptadorTemperatura implements RegistroTemperatura {
             SensorTemperaturaDTO dto = new SensorTemperaturaDTO(
                     sensorC.getUbicacion(),
                     sensorC.getValorSensor(),
-                    "Celsius"
+                    "Celsius",
+                    sensorC.getFechaRegistro()
             );
             resultados.add(dto);
         }
@@ -107,7 +113,8 @@ public class AdaptadorTemperatura implements RegistroTemperatura {
             SensorTemperaturaDTO dto = new SensorTemperaturaDTO(
                     sensorF.getBloque(),
                     temperaturaCelsius,
-                    "Fahrenheit (convertido a Celsius)"
+                    "Obtenido en Fahrenheit y Convertido a Celsius",
+                    sensorF.getFechaRegistro()
             );
             resultados.add(dto);
         }
