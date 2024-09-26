@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 //import java.io.Serializable;
 
+@Table(name = "dispositivo_fahrenheit", schema = "adapter")
 @Entity
 public class FahrenheitSensor {
     
